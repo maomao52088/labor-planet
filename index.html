@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Labor Planet · 劳动星球</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- ===================== ANNOUNCEMENT BANNER ===================== -->
+<div id="ann-banner" class="ann-banner hidden">
+  <span id="ann-banner-icon">📢</span>
+  <span id="ann-banner-text">欢迎来到劳动星球！</span>
+  <button id="ann-banner-close" class="btn btn-sm btn-stone">×</button>
+</div>
+
+<!-- ===================== LOGIN PAGE ===================== -->
+<div id="login-page">
+  <div class="stars" aria-hidden="true"></div>
+  <div class="login-card pixel-card">
+    <h1 class="game-logo">LABOR<br/>PLANET</h1>
+    <p class="game-subtitle">《 劳动星球 》AI 成长平台</p>
+    <p class="game-tagline">建设属于你的星球，让劳动变成冒险！</p>
+
+    <form id="login-form" autocomplete="off" novalidate>
+      <div class="form-group">
+        <label for="inp-nick">🏷️ 探险家昵称</label>
+        <input id="inp-nick" type="text" maxlength="12" placeholder="最多12字，首次登录即注册" required />
+      </div>
+      <div class="form-group">
+        <label for="inp-pin">🔑 4位数字口令</label>
+        <input id="inp-pin" type="password" inputmode="numeric" maxlength="4" placeholder="首次登录即设定口令" required />
+        <small class="form-hint">⚠️ 请勿使用银行密码，口令仅作轻量级保护，请妥善保管。</small>
+      </div>
+      <div class="form-group">
+        <label>🧑‍🚀 选择你的探险角色</label>
+        <div class="char-grid" id="char-grid">
+          <label class="char-option selected" data-val="矿工小队长">
+            <input type="radio" name="char" value="矿工小队长" checked hidden />
+            <span class="char-emoji">⛏️</span>
+            <span class="char-label">矿工小队长</span>
+          </label>
+          <label class="char-option" data-val="农场守护者">
+            <input type="radio" name="char" value="农场守护者" hidden />
+            <span class="char-emoji">🌾</span>
+            <span class="char-label">农场守护者</span>
+          </label>
+          <label class="char-option" data-val="建筑大师">
+            <input type="radio" name="char" value="建筑大师" hidden />
+            <span class="char-emoji">🪚</span>
+            <span class="char-label">建筑大师</span>
+          </label>
+          <label class="char-option" data-val="苔原小怪">
+            <input type="radio" name="char" value="苔原小怪" hidden />
+            <span class="char-emoji">👾</span>
+            <span class="char-label">苔原小怪</span>
+          </label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="inp-class">🏫 班级代码（选填，支持多班隔离）</label>
+        <input id="inp-class" type="text" maxlength="10" placeholder="留空则使用公共空间" />
+      </div>
+      <div id="login-error" class="error-msg hidden"></div>
+      <button type="submit" class="btn btn-success btn-full mt-2">🚀 进入服务器</button>
+    </form>
+  </div>
+</div>
+
+<!-- ===================== MAIN APP ===================== -->
+<div id="app" class="hidden">
+
+  <!-- Header -->
+  <header id="app-header">
+    <div class="header-left">
+      <span class="logo-small">🪐</span>
+      <span class="app-title">劳动星球</span>
+    </div>
+    <div class="header-center" id="header-user-info">
+      <span id="hd-avatar">⛏️</span>
+      <span id="hd-nick" class="pixel-name">-</span>
+      <span id="hd-level" class="level-badge">Lv.1</span>
+      <div class="hd-exp-bar-wrap">
+        <div id="hd-exp-bar" class="hd-exp-bar" style="width:0%"></div>
+      </div>
+      <span id="hd-exp-text" class="exp-text">0/80 EXP</span>
+    </div>
+    <div class="header-right">
+      <button id="btn-logout" class="btn btn-danger btn-sm">退出 🚪</button>
+    </div>
+  </header>
+
+  <!-- Tab Navigation -->
+  <nav id="app-nav">
+    <button class="nav-btn active" data-tab="tab-announce">📢<br/><span>公告</span></button>
+    <button class="nav-btn" data-tab="tab-status">👤<br/><span>状态</span></button>
+    <button class="nav-btn" data-tab="tab-tasks">⚔️<br/><span>任务</span></button>
+    <button class="nav-btn" data-tab="tab-base">🏰<br/><span>基地</span></button>
+    <button class="nav-btn" data-tab="tab-feed">💬<br/><span>动态</span></button>
+    <button class="nav-btn" data-tab="tab-class">🏆<br/><span>班级</span></button>
+  </nav>
+
+  <!-- Content Area -->
+  <main id="app-main">
+
+    <!-- ====== TAB: 公告 ====== -->
+    <section id="tab-announce" class="tab-pane active">
+      <div class="section-title-row">
+        <h2>📢 老师公告栏</h2>
+        <button id="btn-teacher-zone" class="btn btn-gold btn-sm">🔓 老师专区</button>
+      </div>
+
+      <!-- Teacher Auth Card -->
+      <div id="teacher-auth-card" class="pixel-card card-gold hidden">
+        <h3>🔑 教师身份验证</h3>
+        <p class="hint-text">首次设置即为口令，之后须输入相同口令方可发布公告。</p>
+        <div class="input-row">
+          <input id="teacher-pin-inp" type="password" inputmode="numeric" maxlength="4" placeholder="4位数字教师口令" />
+          <button id="btn-teacher-unlock" class="btn btn-success btn-sm">解锁</button>
+          <button id="btn-teacher-cancel" class="btn btn-stone btn-sm">取消</button>
+        </div>
+        <div id="teacher-auth-error" class="error-msg hidden mt-1"></div>
+      </div>
+
+      <!-- Teacher Panel (unlocked) -->
+      <div id="teacher-panel" class="pixel-card card-gold hidden">
+        <div class="panel-hd">
+          <h3>👑 老师发布专区</h3>
+          <button id="btn-teacher-lock" class="btn btn-danger btn-sm">🔒 锁定</button>
+        </div>
+        <form id="ann-form" class="mt-2" novalidate>
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label for="ann-type">公告类型</label>
+              <select id="ann-type">
+                <option value="作业">📝 班级作业</option>
+                <option value="鼓励">💖 温暖鼓励</option>
+                <option value="通知">📢 日常通知</option>
+              </select>
+            </div>
+            <div class="form-group flex-1" id="ann-date-wrap">
+              <label for="ann-date">作业日期</label>
+              <input id="ann-date" type="date" />
+            </div>
+          </div>
+          <div class="form-group mt-1">
+            <label for="ann-content">公告内容</label>
+            <textarea id="ann-content" rows="3" maxlength="200" placeholder="写下要对同学们说的话…"></textarea>
+          </div>
+          <button type="submit" class="btn btn-success btn-full mt-2">🚀 发布公告</button>
+        </form>
+      </div>
+
+      <!-- Announcement List -->
+      <div id="ann-list" class="ann-list mt-2">
+        <p class="empty-hint">暂无公告，等待老师发布…</p>
+      </div>
+    </section>
+
+    <!-- ====== TAB: 状态 ====== -->
+    <section id="tab-status" class="tab-pane">
+      <div class="two-col">
+        <!-- Companion Pet -->
+        <div class="pixel-card card-green">
+          <h3>🐾 守护伙伴养成</h3>
+          <div class="pet-center">
+            <div id="pet-emoji" class="pet-emoji">🥚</div>
+            <div id="pet-stage" class="pet-stage-name">守护蛋</div>
+            <div id="pet-desc" class="pet-desc">喂养次数: <strong id="pet-fed">0</strong> 次</div>
+          </div>
+          <p class="hint-text mt-2">每完成一次任务喂养伙伴一次：🥚蛋 → 🐣雏兽(5次) → 🐾成长兽(15次) → 🐉最终形态(30次)</p>
+        </div>
+
+        <!-- AI Quote + Stats -->
+        <div class="pixel-card">
+          <h3>🤖 AI伙伴寄语</h3>
+          <div class="ai-bubble">
+            <span class="ai-icon">🤖</span>
+            <p id="ai-quote" class="ai-quote-text">还没开始今天的冒险？去任务版块把家务翻译成星际征程吧！</p>
+          </div>
+          <div class="stats-mini mt-2">
+            <div class="stat-row"><span>累计经验</span><strong id="st-exp">0</strong></div>
+            <div class="stat-row"><span>开箱总数</span><strong id="st-chests">0</strong></div>
+            <div class="stat-row"><span>木箱/金箱/钻石箱</span><strong id="st-chest-detail">0/0/0</strong></div>
+            <div class="stat-row"><span>完成任务数</span><strong id="st-tasks">0</strong></div>
+            <div class="stat-row"><span>最长连续天数</span><strong id="st-streak">0</strong> 天</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Labor Calendar -->
+      <div class="pixel-card mt-3">
+        <div class="calendar-header-row">
+          <button id="cal-prev" class="btn btn-stone btn-sm">◀</button>
+          <h3 id="cal-title">2026年7月</h3>
+          <button id="cal-next" class="btn btn-stone btn-sm">▶</button>
+        </div>
+        <p class="hint-text mb-2">🟠 橙色格代表当天完成了劳动任务，格内数字为完成任务数。</p>
+        <div class="calendar-week-hd">
+          <span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span>
+        </div>
+        <div id="cal-grid" class="calendar-grid"></div>
+      </div>
+    </section>
+
+    <!-- ====== TAB: 任务 ====== -->
+    <section id="tab-tasks" class="tab-pane">
+      <div class="two-col">
+        <!-- AI Translate Form -->
+        <div class="pixel-card">
+          <h3>🪄 AI任务翻译机</h3>
+          <p class="hint-text">输入你要做的家务，AI把它变成星际冒险！</p>
+          <div class="form-group mt-2">
+            <label for="hw-input">📋 今天打算做什么家务？</label>
+            <input id="hw-input" type="text" maxlength="30" placeholder="例如: 洗碗、扫地、整理书桌…" />
+          </div>
+          <button id="btn-translate" class="btn btn-success btn-full mt-1">✨ AI 翻译成任务</button>
+          <div id="translate-loading" class="loading-row hidden mt-2">
+            <span class="pixel-spinner"></span> AI正在翻译冒险中…
+          </div>
+        </div>
+
+        <!-- Weekly Boss -->
+        <div class="pixel-card card-red">
+          <div class="boss-title-row">
+            <h3>👹 每周BOSS挑战</h3>
+            <span class="weekly-badge">WEEKLY</span>
+          </div>
+          <p class="hint-text">每周可发起一次大型重量任务（40~120 EXP），挑战BOSS获取超高奖励！</p>
+          <div id="boss-area" class="mt-2"></div>
+        </div>
+      </div>
+
+      <!-- Task List -->
+      <div class="pixel-card mt-3">
+        <h3>🎒 今日冒险任务包</h3>
+        <p class="hint-text">完成任务后点击"开宝箱"结算经验，劳动成果会同步到班级动态！</p>
+        <div id="task-list" class="task-list mt-2">
+          <p class="empty-hint">还没有任务，去上方翻译一件家务吧！</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== TAB: 基地 ====== -->
+    <section id="tab-base" class="tab-pane">
+      <!-- Base Build -->
+      <div class="pixel-card card-wood">
+        <h3>🏰 劳动星球基地建设</h3>
+        <div class="base-display text-center">
+          <div id="base-emoji" class="base-big-emoji">⛺</div>
+          <div id="base-name" class="base-name">第1阶段：营地</div>
+          <div id="base-next-hint" class="hint-text mt-1">距离小屋还需 80 EXP</div>
+        </div>
+        <div class="base-timeline mt-3" id="base-timeline">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+
+      <!-- Badge Wall -->
+      <div class="pixel-card mt-3">
+        <h3>🏅 成就徽章收藏墙</h3>
+        <p class="hint-text">9种成就徽章，记录你在劳动征途上的每一个里程碑！</p>
+        <div id="badge-wall" class="badge-wall mt-2">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== TAB: 动态 ====== -->
+    <section id="tab-feed" class="tab-pane">
+      <div class="pixel-card">
+        <h3>💬 班级成长动态</h3>
+        <div class="community-rule mb-2">
+          <small>🌟 <b>文明公约：</b>留言应为具体鼓励，禁止攀比、嘲讽；禁止透露真实姓名、住址等隐私信息。</small>
+        </div>
+        <div id="feed-list" class="feed-list">
+          <p class="empty-hint">还没有动态，完成一次任务开宝箱就会自动发布！</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== TAB: 班级 ====== -->
+    <section id="tab-class" class="tab-pane">
+      <!-- Team Target -->
+      <div class="pixel-card card-green">
+        <h3>🤝 本周全班协作目标</h3>
+        <p class="hint-text">任意同学完成一次任务，全班进度条就会前进！一起达成本周劳动目标！</p>
+        <div class="team-target-display mt-3">
+          <div class="team-count-row">
+            <span>当前完成次数</span>
+            <strong class="pixel-accent"><span id="team-cur">0</span> / <span id="team-goal">50</span> 次</strong>
+          </div>
+          <div class="progress-wrap mt-1">
+            <div id="team-progress" class="progress-bar bar-success" style="width:0%"></div>
+          </div>
+          <div id="team-victory" class="team-victory hidden mt-2">
+            🎉 全班协作成功！大家都是劳动小英雄！🎉
+          </div>
+        </div>
+      </div>
+
+      <!-- Racing Track -->
+      <div class="pixel-card mt-3">
+        <h3>🏃 星际赛道竞速</h3>
+        <p class="hint-text">每个人都在自己赛道奔跑，参照共同的经验终点，没有垫底，只有前进！</p>
+        <div id="race-tracks" class="race-tracks mt-2">
+          <p class="empty-hint">等待班级同学加入…</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ===================== CHEST MODAL ===================== -->
+<div id="chest-modal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+  <div class="pixel-card modal-card text-center">
+    <h3 id="chest-modal-title">📦 神秘宝箱出现了！</h3>
+    <div id="chest-anim" class="chest-anim">📦</div>
+    <p class="hint-text mt-1" id="chest-task-name">任务名称</p>
+    <div id="chest-base-info" class="chest-base-info">
+      基础经验: <strong id="chest-base-exp">15</strong> EXP
+      <span id="chest-early-bird" class="early-bird hidden">⏰ 早鸟奖励 +20 EXP！</span>
+    </div>
+    <button id="btn-open-chest" class="btn btn-success btn-full mt-3">🔨 砸开宝箱！</button>
+
+    <div id="chest-result" class="chest-result hidden mt-3">
+      <div class="sparkle">✨✨✨</div>
+      <p>开出了: <strong id="chest-type-name" class="pixel-accent">钻石宝箱 💎</strong>（倍率 <span id="chest-mult">x2</span>）</p>
+      <p class="chest-exp-result">获得经验: <strong id="chest-final-exp" class="big-exp">50</strong> EXP！</p>
+      <div id="chest-ai-msg" class="ai-bubble mt-2">
+        <span class="ai-icon">🤖</span>
+        <p id="chest-ai-text" class="ai-quote-text">太棒了！</p>
+      </div>
+      <button id="btn-collect" class="btn btn-success btn-full mt-3">🎒 收入背包</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== TIME LIMIT SOFT REMINDER ===================== -->
+<div id="time-limit-modal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+  <div class="pixel-card modal-card text-center">
+    <h3>⏰ 柔性护眼提醒</h3>
+    <div class="modal-big-icon">📢</div>
+    <p class="mt-2">探险家，你已连续使用劳动星球 <strong>10分钟</strong> 啦！</p>
+    <p class="hint-text italic-text mt-1">"Labor Planet 的初衷是让你回到真实生活中去劳动，而不是沉浸在屏幕里。"</p>
+    <p class="mt-2">任务记录已妥善保存，现在去真实生活里享受劳动的乐趣吧！</p>
+    <div class="mt-3 btn-row">
+      <button id="btn-dismiss-limit" class="btn btn-success">我知道啦！继续 😊</button>
+      <button id="btn-logout-limit" class="btn btn-danger ml-1">下线退出 🚪</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== TOAST ===================== -->
+<div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
