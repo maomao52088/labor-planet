@@ -47,10 +47,10 @@ html { font-size: 14px; }
 
 body {
   font-family: var(--font-ui);
-  background: linear-gradient(rgba(13, 27, 75, 0.4), rgba(45, 106, 45, 0.4)), url('bg.jpg') no-repeat center center fixed;
+  background: linear-gradient(rgba(13, 27, 75, 0.65), rgba(45, 106, 45, 0.65)), url('bg.jpg') no-repeat center center fixed;
   background-size: cover;
   min-height: 100vh;
-  color: var(--col-text);
+  color: #1a0f00; /* Darker default text color for enhanced contrast on light panels */
   overflow-x: hidden;
 }
 
@@ -88,20 +88,25 @@ body {
 
 /* ---------- 3. Pixel Card ---------- */
 .pixel-card {
-  background: var(--col-parchment);
+  background: rgba(245, 238, 211, 0.98); /* High-opacity solid parchment background */
   border: 3px solid #4a3728;
   border-radius: var(--border-r);
   box-shadow: var(--shadow-pixel);
   padding: 16px;
   position: relative;
+  color: #1a0f00;
 }
-.pixel-card h3 { font-size: 0.9rem; margin-bottom: 8px; color: #3a2a1a; }
-.pixel-card h2 { font-size: 1rem; margin-bottom: 10px; }
+.pixel-card h3 { font-size: 0.9rem; margin-bottom: 8px; color: #2a1b0c; font-weight: bold; }
+.pixel-card h2 { font-size: 1rem; margin-bottom: 10px; color: #2a1b0c; font-weight: bold; }
 
-.card-green   { background: #d4edda; border-color: var(--col-green-dk); }
-.card-gold    { background: #fef3cd; border-color: var(--col-gold-dk); }
-.card-red     { background: #fde8e4; border-color: var(--col-red-dk); }
-.card-wood    { background: #f5e6d0; border-color: var(--col-wood); }
+.card-green   { background: rgba(212, 237, 218, 0.98); border-color: var(--col-green-dk); color: #155724; }
+.card-green h3, .card-green h2 { color: #155724; }
+.card-gold    { background: rgba(254, 243, 205, 0.98); border-color: var(--col-gold-dk); color: #856404; }
+.card-gold h3, .card-gold h2 { color: #856404; }
+.card-red     { background: rgba(253, 232, 228, 0.98); border-color: var(--col-red-dk); color: #721c24; }
+.card-red h3, .card-red h2 { color: #721c24; }
+.card-wood    { background: rgba(245, 230, 208, 0.98); border-color: var(--col-wood); color: #5a3010; }
+.card-wood h3, .card-wood h2 { color: #5a3010; }
 
 /* ---------- 4. Buttons ---------- */
 .btn {
