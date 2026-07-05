@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<Error>
+	<Code>AccessDenied</Code>
+	<Message>Access Denied.</Message>
+	<Resource>/tab/e300b10a-acfd-41f0-9684-542ffb83cd3d/doc_img/2b99b8a4ba9449a2a855ce288515d883.jpg</Resource>
+	<RequestId>NmE0YTY2YjVfODhlZjc4MGJfNzMyM18xYTM4MDJhYQ==</RequestId>
+	<TraceId>OGVmYzZiMmQzYjA2OWNhODk0NTRkMTBiOWVmMDAxODc0OWRkZjk0ZDM1NmI1M2E2MTRlY2MzZDhmNmI5MWI1OWEzMDE4ZGI4NTE5MWE4YmYxODQ1NWI3YzFiOTg0ZjdlOTI3ODEwYWE4ZmUwM2VlNTNjYmE4YWU2NjM4MDdmYmM=</TraceId>
+</Error>
+

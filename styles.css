@@ -47,12 +47,8 @@ html { font-size: 14px; }
 
 body {
   font-family: var(--font-ui);
-  background: linear-gradient(180deg,
-    var(--bg-sky-top) 0%,
-    var(--bg-sky-mid) 40%,
-    var(--bg-sky-sunset) 70%,
-    var(--bg-ground) 100%);
-  background-attachment: fixed;
+  background: linear-gradient(rgba(13, 27, 75, 0.4), rgba(45, 106, 45, 0.4)), url('bg.jpg') no-repeat center center fixed;
+  background-size: cover;
   min-height: 100vh;
   color: var(--col-text);
   overflow-x: hidden;
